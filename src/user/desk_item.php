@@ -1,14 +1,18 @@
 <?php
+
+use function PHPSTORM_META\type;
+
 require_once '../koneksi/koneksi.php';
+session_start();
 
 // Proses tambah ke keranjang
 if (isset($_POST['tambah_keranjang'])) {
     try {
         $db = dbConnection();
         // Validasi input
-        $itemId = $_POST['item_id'];
-        $quantity = $_POST['quantity'];
-        $userId = $_SESSION['user_id'];
+        $itemId = (int)$_POST['item_id'];
+        $quantity = (int)$_POST['quantity'];
+        $userId = (int)$_SESSION['user']['id'];
 
         // Cek stok produk
         $stokQuery = "SELECT stock FROM item WHERE id = :itemId";
@@ -232,6 +236,7 @@ try {
                         <!-- Formulir Tambah ke Keranjang -->
                         <form method="POST" class="flex-grow-1">
                             <input type="hidden" name="item_id" value="<?= $item['id'] ?>">
+                            <input type="hidden" name="quantity" value="<?= 1 ?>">
                             <div class="input-group">
                                 <!-- Tombol Tambah ke Keranjang -->
                                 <button

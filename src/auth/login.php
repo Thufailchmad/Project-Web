@@ -7,6 +7,7 @@ require '../koneksi/koneksi.php';
 $dotenv = Dotenv::createImmutable('../..');
 $dotenv->load();
 $useragent = $_SERVER['HTTP_USER_AGENT'];
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $error = [];
@@ -34,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             exit();
         }
         $str = urldecode(serialize($error));
-        header("location: .?error=$str");
+        header("location: login.php?error=$str");
         exit();
     }
 
@@ -50,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 ]);
                 exit();
             }
-            header("location: .?registered=true");
+            header("location: login.php?unregistered=true");
             exit();
         }
         $user = $query->fetch(PDO::FETCH_NAMED);
@@ -62,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             ]);
             exit();
         }
-        header("location: .?wrong=true");
+        header("location: login.php");
         exit();
     }
 
@@ -74,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             ]);
             exit();
         }
-        header("location: .?wrong=true");
+        header("location: login.php?password=true");
         exit();
     }
 
@@ -95,9 +96,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         ]);
         exit();
     }
-    header("location: dashboard");
-    // echo "<script>alert('Berhasil Login')</script>";
-    exit();
+
+    unset($user["password"]);
+    $_SESSION["user"] = $user;
+    if($user["role"] == 2){
+        header("location: ../user/dashboard.php");
+        exit();
+    }else{
+        header("location: ../admin");
+        exit();
+    }
 }
 
 $error = isset($_GET['error']) ? (unserialize(urldecode($_GET['error']))) : "";
@@ -145,17 +153,19 @@ $wrong = isset($_GET['wrong']) ? $_GET['wrong'] : false;
                     <div class="card-header">
                         Login
                     </div>
+                    <div class="text-danger"><?php echo isset($_GET["unregistered"])? "Email Tidak Terdaftar": "" ?></div>
+                    <div class="text-danger"><?php echo isset($_GET["password"])? "Email atau Password Salah" : ""?></div>
                     <div class="card-body">
                         <form method="post" action="">
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email">
-                                <?php echo isset($error['email']) ? $error['email'] : ""; ?>
+                                <div class="text-danger"><?php echo isset($error['email']) ? $error['email'] : ""; ?></div>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
-                                <?php echo isset($error['password']) ? $error['password'] : ""; ?>
+                                <div class="text-danger"><?php echo isset($error['password']) ? $error['password'] : ""; ?></div>
                             </div>
                             <div class="form-group">
                                 <div class="text-center">
