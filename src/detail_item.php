@@ -55,10 +55,6 @@ try {
     <link rel="shortcut icon" href="images/img-listrik.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #f4f4f4;
-        }
-
         .logo {
             width: 60px;
             height: 60px;
@@ -67,7 +63,6 @@ try {
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #ffffff;
         }
 
         .logo img {
@@ -113,7 +108,7 @@ try {
         }
 
         .btn-custom {
-            background-color: #f28b82;
+            background-color: #00bfff;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -139,7 +134,9 @@ try {
         <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="logo">
-                <img src="images/img-listrik.png" alt="">
+                <a href="index.php">
+                    <img src="images/img-listrik.png" alt="">
+                </a>
             </div>
             <div class="flex-grow-1 mx-3">
                 <form action="" method="GET">
@@ -215,7 +212,7 @@ try {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary" href="auth/login.php">Login</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='auth/login.php'">Login</button>
                 </div>
             </div>
         </div>

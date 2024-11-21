@@ -1,7 +1,6 @@
 <?php
-require_once '../koneksi/koneksi.php'; // Koneksi ke database
+require_once '../koneksi/koneksi.php'; 
 
-// Mendapatkan koneksi database
 try {
     $db = dbConnection(); // Memanggil fungsi untuk mendapatkan koneksi
 } catch (PDOException $e) {
@@ -22,6 +21,23 @@ function getOrderItems($db, $historyId)
     $stmt = $db->prepare($query);
     $stmt->execute([$historyId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Ambil nama item berdasarkan ID item
+function getItemName($db, $itemId)
+{
+    $query = "SELECT name FROM item WHERE id = ?";
+    $stmt = $db->prepare($query);
+    $stmt->execute([$itemId]);
+    return $stmt->fetchColumn(); 
+}
+
+//mengambil nama user dari userId
+function getNamaUser($db, $userId) {
+    $query = "SELECT name FROM user WHERE id = ?";
+    $stmt = $db->prepare($query);
+    $stmt->execute([$userId]);
+    return $stmt->fetchColumn();
 }
 
 // Ambil semua penjualan untuk ditampilkan
@@ -46,17 +62,20 @@ $sales = getAllSales($db);
                     <th>ID</th>
                     <th>Tanggal</th>
                     <th>Total</th>
-                    <th>User ID</th>
+                    <th>Nama User</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <?php while ($row = $sales->fetch(PDO::FETCH_ASSOC)): ?>
+                <?php 
+                $id = 1;
+                while ($row = $sales->fetch(PDO::FETCH_ASSOC)): ?>
+                    <?php $userName = getNamaUser($db, $row['userId']); ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($row['id']); ?></td>
+                        <td><?php echo htmlspecialchars($id++); ?></td>
                         <td><?php echo htmlspecialchars($row['date']); ?></td>
                         <td><?php echo htmlspecialchars($row['total']); ?></td>
-                        <td><?php echo htmlspecialchars($row['userId']); ?></td>
+                        <td><?php echo htmlspecialchars($userName); ?></td>
                         <td>
                             <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#orderDetailsModal<?php echo $row['id']; ?>">Lihat Detail</button>
 
@@ -65,7 +84,7 @@ $sales = getAllSales($db);
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="orderDetailsModalLabel">Detail Barang yang Dipesan (ID: <?php echo $row['id']; ?>)</h5>
+                                            <h5 class="modal-title" id="orderDetailsModalLabel">Detail Barang yang Dipesan </h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
@@ -73,19 +92,19 @@ $sales = getAllSales($db);
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>
-                                                        <th>Item ID</th>
+                                                        <th>Nama Item</th>
                                                         <th>Kuantitas</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    // Ambil detail barang untuk penjualan ini
                                                     $orderItems = getOrderItems($db, $row['id']);
                                                     if ($orderItems) {
                                                         foreach ($orderItems as $item) {
+                                                            $itemName = getItemName($db, $item['itemId']);
                                                             echo "<tr>
                                                                 <td>" . htmlspecialchars($item['id']) . "</td>
-                                                                <td>" . htmlspecialchars($item['itemId']) . "</td>
+                                                                <td>" . htmlspecialchars($itemName) . "</td>
                                                                 <td>" . htmlspecialchars($item['quantity']) . "</td>
                                                             </tr>";
                                                         }

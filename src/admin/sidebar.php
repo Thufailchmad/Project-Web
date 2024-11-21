@@ -1,10 +1,10 @@
 <div class="nk-sidebar is-light nk-sidebar-fixed is-light " data-content="sidebarMenu">
     <div class="nk-sidebar-element nk-sidebar-head">
         <div class="nk-sidebar-brand">
-            <a href="html/index.html" class="logo-link nk-sidebar-logo">
-                <img class="logo-light logo-img" src="./images/img-listrik.png" srcset="./images/img-listrik.png 2x" alt="logo">
-                <img class="logo-dark logo-img" src="./images/img-listrik.png" srcset="./images/img-listrik.png 2x" alt="logo-dark">
-                <img class="logo-small logo-img logo-img-small" src="./images/img-listrik.png" srcset="./images/img-listrik.png 2x" alt="logo-small">
+            <a href="admin/index.php" class="logo-link nk-sidebar-logo">
+                <img class="logo-light logo-img"   src="./images/img-listrik.png" srcset="./images/img-listrik.png 2x" alt="logo" >
+                <img class="logo-dark logo-img"   src="./images/img-listrik.png" srcset="./images/img-listrik.png 2x" alt="logo-dark">
+                <img class="logo-small logo-img logo-img-small"   src="./images/img-listrik.png" srcset="./images/img-listrik.png 2x" alt="logo-small">
             </a>
         </div>
         <div class="nk-menu-trigger me-n2">

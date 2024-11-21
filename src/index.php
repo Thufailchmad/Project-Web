@@ -40,7 +40,6 @@ try {
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #ffffff;
     }
 
     .logo img {
@@ -81,11 +80,10 @@ try {
       background-size: cover !important;
       background-position: center !important;
       object-fit: cover;
-      /* Pastikan gambar tetap proporsional */
     }
 
     .product-info {
-      background-color: #f28b82;
+      background-color: #00bfff;
       color: white;
       padding: 10px;
       text-align: center;
@@ -161,6 +159,7 @@ try {
       }
       ?>
     </div>
+
     <!-- Tampilkan pesan jika tidak ada hasil pencarian -->
     <?php if (!empty($search) && $result->rowCount() == 0): ?>
       <div class="alert alert-info text-center mt-3">

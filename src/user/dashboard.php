@@ -79,11 +79,10 @@ try {
       background-size: cover !important;
       background-position: center !important;
       object-fit: cover;
-      /* Pastikan gambar tetap proporsional */
     }
 
     .product-info {
-      background-color: #f28b82;
+      background-color:  #00bfff;
       color: white;
       padding: 10px;
       text-align: center;
