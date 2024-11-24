@@ -153,8 +153,13 @@ try {
               ?>
             </button>
 
+            <!-- Tombol history -->
+            <button class="btn btn-outline-secondary position-relative me-2" onclick="window.location.href='history.php'">
+            <img src="../images/history.png" alt="Keranjang" style="width: 24px; height: 24px;"> 
+          </button>
+
             <!-- Tombol Login & Register -->
-            <button class="btn btn-secondary" onclick="window.location.href='../auth/login.php'">Logout</button>
+            <button class="btn btn-primary" onclick="window.location.href='../auth/login.php'">Logout</button>
           </div>
         </div>
       </div>

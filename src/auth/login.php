@@ -119,7 +119,7 @@ $wrong = isset($_GET['wrong']) ? $_GET['wrong'] : false;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-   
+    <link rel="shortcut icon" href="../images/img-listrik.png">
     <link rel="stylesheet" href="../assets-frontend/css/style.css">
     <link rel="stylesheet" href="../assets-frontend/css/4.5.2-bootstrap.min.css">
 

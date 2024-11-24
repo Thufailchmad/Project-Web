@@ -11,7 +11,7 @@ if ($useragent == "android") {
 
 // Proses tambah ke keranjang
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    
+
     try {
         $db = dbConnection();
         // Validasi input
@@ -19,10 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $quantity = (int)$_POST['quantity'];
         if ($useragent == "android") {
             $userId = (int)$_POST["user_id"];
-        }else{
-            $userId = (int)$_SESSION['user'] ['id'];
+        } else {
+            $userId = (int)$_SESSION['user']['id'];
         }
-        
+
         // Cek stok produk
         $stokQuery = "SELECT stock FROM item WHERE id = :itemId";
         $stokStmt = $db->prepare($stokQuery);
@@ -32,10 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         if ($quantity > $produk['stock']) {
             if ($useragent == "android") {
                 echo json_encode([
-                'status' => "Stock tidak cukup",
-                'message' => "Stok tidak mencukupi. Tersedia hanya {$produk['stock']} item."
-            ]);
-            exit();
+                    'status' => "Stock tidak cukup",
+                    'message' => "Stok tidak mencukupi. Tersedia hanya {$produk['stock']} item."
+                ]);
+                exit();
             }
             // Pesan error jika quantity melebihi stok
             $_SESSION['error'] = "Stok tidak mencukupi. Tersedia hanya {$produk['stock']} item.";
@@ -155,6 +155,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deskripsi Produk</title>
+    <link rel="shortcut icon" href="../images/img-listrik.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -212,9 +213,9 @@ try {
         <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="logo">
-            <a href="dashboard.php">
-                <img src="../images/img-listrik.png" alt="">
-            </a>
+                <a href="dashboard.php">
+                    <img src="../images/img-listrik.png" alt="">
+                </a>
             </div>
             <div class="flex-grow-1 mx-3">
                 <form action="" method="GET">
@@ -225,27 +226,27 @@ try {
             </div>
             <!-- Tombol Keranjang -->
             <button class="btn btn-outline-secondary position-relative me-2" onclick="window.location.href='keranjang.php'">
-              <img src="../images/keranjang.png" alt="Keranjang" style="width: 24px; height: 24px;">
-              <?php
-              if (isset($_SESSION['user_id'])) {
-                try {
-                  $db = dbConnection();
-                  $cartQuery = "SELECT COUNT(*) as cart_count FROM chart WHERE userId = :userId";
-                  $cartStmt = $db->prepare($cartQuery);
-                  $cartStmt->execute(['userId' => $_SESSION['user_id']]);
-                  $cartCount = $cartStmt->fetch(PDO::FETCH_ASSOC)['cart_count'];
+                <img src="../images/keranjang.png" alt="Keranjang" style="width: 24px; height: 24px;">
+                <?php
+                if (isset($_SESSION['user_id'])) {
+                    try {
+                        $db = dbConnection();
+                        $cartQuery = "SELECT COUNT(*) as cart_count FROM chart WHERE userId = :userId";
+                        $cartStmt = $db->prepare($cartQuery);
+                        $cartStmt->execute(['userId' => $_SESSION['user_id']]);
+                        $cartCount = $cartStmt->fetch(PDO::FETCH_ASSOC)['cart_count'];
 
-                  if ($cartCount > 0) {
-                    echo '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">'
-                      . $cartCount .
-                      '<span class="visually-hidden">items in cart</span></span>';
-                  }
-                } catch (PDOException $e) {
-                  // Tangani error jika perlu
-                  $cartCount = 0;
+                        if ($cartCount > 0) {
+                            echo '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">'
+                                . $cartCount .
+                                '<span class="visually-hidden">items in cart</span></span>';
+                        }
+                    } catch (PDOException $e) {
+                        // Tangani error jika perlu
+                        $cartCount = 0;
+                    }
                 }
-              }
-              ?>
+                ?>
             </button>
             <button class="btn btn-secondary" onclick="window.location.href='../auth/login.php'">Logout</button>
         </div>
@@ -295,6 +296,7 @@ try {
                         </form>
                     </div>
 
+
                     <!-- Tampilkan Pesan Sukses atau Error -->
                     <?php if (isset($_SESSION['success'])): ?>
                         <div class="alert alert-success mt-3">
@@ -309,6 +311,9 @@ try {
                             <?php unset($_SESSION['error']); ?>
                         </div>
                     <?php endif; ?>
+                    <div class="text-center mt-4">
+                        <a href="dashboard.php" class="btn btn-primary">Kembali ke Dashboard</a>
+                    </div>
                 </div>
             </div>
         </div>

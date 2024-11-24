@@ -317,6 +317,9 @@ try {
                         <?php endif; ?>
                     </div>
                 </div>
+                <div class="text-center mt-4">
+            <a href="dashboard.php" class="btn btn-primary">Kembali ke Dashboard</a>
+        </div>
             </div>
         </div>
     </div>
