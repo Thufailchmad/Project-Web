@@ -1,6 +1,11 @@
 <?php
 require_once 'koneksi/koneksi.php';
 
+$useragent = $_SERVER['HTTP_USER_AGENT'];
+if ($useragent == "android") {
+  header('Content-Type: application/json');
+}
+
 try {
   $db = dbConnection();
 
@@ -16,6 +21,16 @@ try {
     // Jika tidak ada pencarian, tampilkan semua item
     $query = "SELECT * FROM item";
     $result = $db->query($query);
+
+    if ($useragent == "android") {
+      $item = $result->fetchAll(PDO::FETCH_NAMED);
+  
+      echo json_encode([
+        'status'=>"true",
+        'item'=>$item
+      ]);
+      exit();
+  }
   }
 } catch (PDOException $e) {
   die("Koneksi ke database gagal: " . $e->getMessage());

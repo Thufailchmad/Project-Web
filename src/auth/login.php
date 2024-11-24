@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (count($error) > 0) {
         if ($useragent == "android") {
             echo json_encode([
-                'status' => "error",
+                'status' => "Login Gagal",
                 'error' => $error
             ]);
             exit();
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         if ($query->rowCount() == 0) {
             if ($useragent == "android") {
                 echo json_encode([
-                    'status' => 'error',
+                    'status' => 'Login Gagal',
                     'message' => 'Email atau password salah',
                 ]);
                 exit();
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     } catch (Exception $e) {
         if ($useragent == "android") {
             echo json_encode([
-                'status' => 'error',
+                'status' => 'Login Gagal',
                 'message' => 'Email atau password salah',
             ]);
             exit();
@@ -92,7 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         echo json_encode([
             'status' => 'Login Berhasil',
             'access_token' => $access_token,
-            'expiry' => $exp
+            'expiry' => $exp,
+            "user_id"=>$user['id']
         ]);
         exit();
     }

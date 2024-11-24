@@ -1,15 +1,25 @@
 <?php
 session_start();
 require '../koneksi/koneksi.php';
+$useragent = $_SERVER['HTTP_USER_AGENT'];
+if ($useragent == "android") {
+    header('Content-Type: application/json');
+}
 
-if (!isset($_SESSION['user']['id'])) {
-    header('Location: ../auth/login.php');
-    exit();
+if ($useragent != "android") {
+    if (!isset($_SESSION['user']['id'])) {
+        header('Location: ../auth/login.php');
+        exit();
+    }
 }
 
 try {
     $conn = dbConnection();
-    $userId = (int)$_SESSION['user']['id'];
+    if($useragent == "android") {
+        $userId = (int)$_GET["user_id"];
+    }else{
+        $userId = (int)$_SESSION['user']['id'];
+    }
 
     // Fungsi untuk menghapus item dari keranjang
     function deleteFromCart($conn, $cartId, $userId)
@@ -214,8 +224,18 @@ try {
 
     // Hitung total harga
     $totalHarga = array_sum(array_column($cartItems, 'total_price'));
+    if ($useragent == "android") {
+        echo json_encode(['success' => true, 'cartItems' => $cartItems]);
+        exit();
+    }
+
 } catch (Exception $e) {
     // Tangani error
+    if ($useragent == "android") {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        exit();
+    }
+
     error_log($e->getMessage());
     die("Terjadi kesalahan: " . $e->getMessage());
 }

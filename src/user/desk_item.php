@@ -4,16 +4,25 @@ use function PHPSTORM_META\type;
 
 require_once '../koneksi/koneksi.php';
 session_start();
+$useragent = $_SERVER['HTTP_USER_AGENT'];
+if ($useragent == "android") {
+    header('Content-Type: application/json');
+}
 
 // Proses tambah ke keranjang
-if (isset($_POST['tambah_keranjang'])) {
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    
     try {
         $db = dbConnection();
         // Validasi input
         $itemId = (int)$_POST['item_id'];
         $quantity = (int)$_POST['quantity'];
-        $userId = (int)$_SESSION['user']['id'];
-
+        if ($useragent == "android") {
+            $userId = (int)$_POST["user_id"];
+        }else{
+            $userId = (int)$_SESSION['user'] ['id'];
+        }
+        
         // Cek stok produk
         $stokQuery = "SELECT stock FROM item WHERE id = :itemId";
         $stokStmt = $db->prepare($stokQuery);
@@ -21,6 +30,13 @@ if (isset($_POST['tambah_keranjang'])) {
         $produk = $stokStmt->fetch(PDO::FETCH_ASSOC);
 
         if ($quantity > $produk['stock']) {
+            if ($useragent == "android") {
+                echo json_encode([
+                'status' => "Stock tidak cukup",
+                'message' => "Stok tidak mencukupi. Tersedia hanya {$produk['stock']} item."
+            ]);
+            exit();
+            }
             // Pesan error jika quantity melebihi stok
             $_SESSION['error'] = "Stok tidak mencukupi. Tersedia hanya {$produk['stock']} item.";
             header('Location: desk_item.php?id=' . $itemId);
@@ -54,6 +70,13 @@ if (isset($_POST['tambah_keranjang'])) {
             ]);
         }
 
+        if ($useragent == "android") {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Produk berhasil ditambahkan',
+            ]);
+            exit();
+        }
         // Set pesan sukses
         $_SESSION['success'] = "Produk berhasil ditambahkan ke keranjang!";
 
@@ -61,6 +84,13 @@ if (isset($_POST['tambah_keranjang'])) {
         header('Location: desk_item.php?id=' . $itemId);
         exit();
     } catch (PDOException $e) {
+        if ($useragent == "android") {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Gagal menambahkan ke keranjang',
+            ]);
+            exit();
+        }
         // Tangani error
         $_SESSION['error'] = "Gagal menambahkan ke keranjang: " . $e->getMessage();
         header('Location: desk_item.php?id=' . $_POST['item_id']);
@@ -75,10 +105,25 @@ try {
     $query = "SELECT * FROM item WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->execute(['id' => $_GET['id']]);
-    $item = $stmt->fetch(PDO::FETCH_ASSOC);
+    $item = $stmt->fetch(PDO::FETCH_NAMED);
 
     if (!$item) {
+        if ($useragent == "android") {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Item tidak tersedia',
+            ]);
+            exit();
+        }
         header('Location: dashboard.php');
+        exit();
+    }
+
+    if ($useragent == "android") {
+        echo json_encode([
+            'status' => 'ok',
+            'item' => $item,
+        ]);
         exit();
     }
 } catch (PDOException $e) {
@@ -243,7 +288,6 @@ try {
                                 <!-- Tombol Tambah ke Keranjang -->
                                 <button
                                     type="submit"
-                                    name="tambah_keranjang"
                                     class="btn btn-danger flex-grow-1">
                                     <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
                                 </button>
