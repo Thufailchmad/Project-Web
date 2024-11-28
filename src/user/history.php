@@ -2,14 +2,29 @@
 session_start();
 require_once '../koneksi/koneksi.php';
 
+$useragent = $_SERVER['HTTP_USER_AGENT'];
+if ($useragent == "android") {
+    header('Content-Type: application/json');
+}
+
+if ($useragent != "android") {
+    if (!isset($_SESSION['user']['id'])) {
+        header('Location: ../auth/login.php');
+        exit();
+    }
+}
+
 try {
     $conn = dbConnection();
 } catch (PDOException $e) {
     die("Koneksi database gagal: " . $e->getMessage());
 }
-
 // Pastikan menggunakan session user yang sudah ada
-$userId = $_SESSION['user']['id'];
+if($useragent == "android"){
+    $userId = $_GET["user_id"];
+}else{
+    $userId = $_SESSION['user']['id'];
+}
 
 // Query untuk mengambil history belanja dengan join ke tabel users
 $query = "SELECT 
@@ -25,14 +40,22 @@ $query = "SELECT
             h.userId = :userId
           ORDER BY 
             h.date DESC";
-
-try {
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("Query error: " . $e->getMessage());
+if(!isset($_GET["history_id"])){
+    try {
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if($useragent == "android"){
+            echo json_encode([
+                "data"=>$result,
+                "status"=>"ok"
+            ]);
+            exit();
+        }
+    } catch (PDOException $e) {
+        die("Query error: " . $e->getMessage());
+    }
 }
 
 function getOrderItems($conn, $historyId) {
@@ -49,7 +72,16 @@ function getOrderItems($conn, $historyId) {
                 hi.historyId = ?";
     $stmt = $conn->prepare($query);
     $stmt->execute([$historyId]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $history =  $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $history;
+}
+
+if(isset($_GET["history_id"])){
+    echo json_encode([
+        "success"=>"ok",
+        "data"=>getOrderItems($conn, $_GET["history_id"])
+    ]);
+    exit();
 }
 ?>
 

@@ -168,10 +168,10 @@ $wrong = isset($_GET['wrong']) ? $_GET['wrong'] : false;
                                 <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
                                 <div class="text-danger"><?php echo isset($error['password']) ? $error['password'] : ""; ?></div>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <div class="text-center">
                                     <a href="#">Forgot Password?</a>
-                                </div>
+                                </div> -->
                             </div>
                             <button type="submit" name="login" class="btn btn-primary btn-block">Login</button>
                             <div class="form-group mt-4">

@@ -118,7 +118,9 @@ try {
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div class="logo">
-            <img src="../images/img-listrik.png" alt="">
+                <a href="dashboard.php">
+                    <img src="../images/img-listrik.png" alt="">
+                </a>
           </div>
           <div class="flex-grow-1 mx-3">
             <form action="" method="GET">

@@ -175,6 +175,10 @@ try {
                             throw new Exception('ID keranjang tidak valid');
                         }
                         $result = deleteFromCart($conn, $_POST['cartId'], $userId);
+                        if($useragent=="android"){
+                            echo json_encode(['success' => $result]);
+                            exit();
+                        }
                         echo json_encode(['success' => $result]);
                         break;
 
@@ -183,11 +187,19 @@ try {
                             throw new Exception('Parameter tidak lengkap');
                         }
                         $result = updateCartQuantity($conn, $_POST['cartId'], $_POST['quantity'], $userId);
+                        if($useragent=="android"){
+                            echo json_encode(['success' => $result]);
+                            exit();
+                        }
                         echo json_encode(['success' => $result]);
                         break;
 
                     case 'checkout':
                         $result = checkout($userId, $conn);
+                        if($useragent=="android"){
+                            echo json_encode(['success' => $result]);
+                            exit();
+                        }
                         echo json_encode(['success' => $result]);
                         break;
 

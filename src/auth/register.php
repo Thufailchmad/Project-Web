@@ -34,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $error['rePassword'] = "Password dan konfirmasi password tidak cocok";
     }
 
+    
+
     if (count($error) > 0) {
         if ($useragent == "android") {
             echo json_encode([
@@ -60,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 ]);
                 exit();
             }
-            header("location: register.php");
+            header("location: register.php?registered=true");
             exit();
         }
     } catch (Exception $e) {
@@ -167,6 +169,9 @@ $registered = isset($_GET['registered']) ? $_GET['registered'] : false;
                     <div class="card-header">
                         Register
                     </div>
+                    <?php if ($registered) {
+                            echo "<div class='alert alert-warning'>Email telah terdaftar</div>";
+                        } ?>
                     <div class="card-body">
                         <form action="" method="post">
                             <div class="form-group">
@@ -203,9 +208,6 @@ $registered = isset($_GET['registered']) ? $_GET['registered'] : false;
                                 </div>
                             </div>
                         </form>
-                        <?php if ($registered) {
-                            echo "<div class='alert alert-warning'>Email telah terdaftar</div>";
-                        } ?>
                     </div>
                 </div>
             </div>
