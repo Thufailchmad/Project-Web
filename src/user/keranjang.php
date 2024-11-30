@@ -15,9 +15,9 @@ if ($useragent != "android") {
 
 try {
     $conn = dbConnection();
-    if($useragent == "android") {
+    if ($useragent == "android") {
         $userId = (int)$_GET["user_id"];
-    }else{
+    } else {
         $userId = (int)$_SESSION['user']['id'];
     }
 
@@ -175,7 +175,7 @@ try {
                             throw new Exception('ID keranjang tidak valid');
                         }
                         $result = deleteFromCart($conn, $_POST['cartId'], $userId);
-                        if($useragent=="android"){
+                        if ($useragent == "android") {
                             echo json_encode(['success' => $result]);
                             exit();
                         }
@@ -187,7 +187,7 @@ try {
                             throw new Exception('Parameter tidak lengkap');
                         }
                         $result = updateCartQuantity($conn, $_POST['cartId'], $_POST['quantity'], $userId);
-                        if($useragent=="android"){
+                        if ($useragent == "android") {
                             echo json_encode(['success' => $result]);
                             exit();
                         }
@@ -196,7 +196,7 @@ try {
 
                     case 'checkout':
                         $result = checkout($userId, $conn);
-                        if($useragent=="android"){
+                        if ($useragent == "android") {
                             echo json_encode(['success' => $result]);
                             exit();
                         }
@@ -240,7 +240,6 @@ try {
         echo json_encode(['success' => true, 'cartItems' => $cartItems]);
         exit();
     }
-
 } catch (Exception $e) {
     // Tangani error
     if ($useragent == "android") {
@@ -330,8 +329,12 @@ try {
                     </div>
                 </div>
                 <div class="text-center mt-4">
-            <a href="dashboard.php" class="btn btn-primary">Kembali ke Dashboard</a>
-        </div>
+                    <a href="history.php" class="btn ">
+                        <img src="../images/history.png" alt="btn-history" style="width: 20px; height: 20px;">
+                        History
+                    </a>
+                    <a href="dashboard.php" class="btn btn-primary">Kembali ke Dashboard</a>
+                </div>
             </div>
         </div>
     </div>
@@ -443,6 +446,9 @@ try {
                             .then(response => {
                                 if (response.success) {
                                     showAlert('Checkout berhasil!', 'success');
+                                    setTimeout(() => {
+                                        alert("Silahkan Datang Ke Toko Amanah Listrik & IOT Alamat Jl. Basuki Rahmat No.313, Pakem, Kranjingan, Kec. Sumbersari, Kabupaten Jember, Jawa Timur 68131. dan tunjukan bukti history pembelian. ");
+                                    }, 1000);
                                     setTimeout(() => {
                                         window.location.href = 'keranjang.php';
                                     }, 2000);
