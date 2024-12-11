@@ -1,4 +1,5 @@
 <?php
+require_once '../middlewares/auth.middleware.php';
 require_once '../koneksi/koneksi.php';
 
 try {
